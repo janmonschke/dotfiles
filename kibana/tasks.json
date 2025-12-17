@@ -10,22 +10,32 @@
   },
   "tasks": [
     {
+      "label": "test file",
+      "type": "shell",
+      "icon": {
+        "id": "telescope",
+        "color": "terminal.ansiRed"
+      },
+      "command": "cd $KIBANA_HOME && yarn test:jest ${relativeFile}",
+      "isBackground": false
+    },
+    {
+      "label": "test file (watch)",
+      "type": "shell",
+      "icon": {
+        "id": "telescope",
+        "color": "terminal.ansiCyan"
+      },
+      "command": "cd $KIBANA_HOME && yarn test:jest ${relativeFile} --watch",
+      "isBackground": false
+    },
+    {
       "label": "Kibana services",
       "dependsOrder": "parallel",
-      "dependsOn": ["Security Solution", "Elasticsearch", "Kibana"],
+      "dependsOn": ["Elasticsearch", "Kibana"],
       "problemMatcher": [],
       "icon": {
         "id": "star",
-        "color": "terminal.ansiGreen"
-      }
-    },
-    {
-      "label": "Security Solution",
-      "type": "shell",
-      "command": "cd $KIBANA_HOME/x-pack/solutions/security/plugins/security_solution && zsh --interactive",
-      "isBackground": true,
-      "icon": {
-        "id": "folder",
         "color": "terminal.ansiGreen"
       }
     },
@@ -42,7 +52,7 @@
     {
       "label": "Generate security data",
       "type": "shell",
-      "command": "cd $KIBANA_HOME/x-pack/solutions/security/plugins/security_solution && yarn test:generate && curl --location 'http://elastic:changeme@localhost:5601/api/detection_engine/rules' --header 'kbn-xsrf: cypress-creds' --header 'Content-Type: application/json'  --header 'elastic-api-version: 2023-10-31' --data '{\"type\": \"query\",\"query\": \"*\",\"index\": [\"apm-*-transaction*\",\"auditbeat-*\",\"endgame-*\",\"filebeat-*\",\"logs-*\",\"packetbeat-*\",\"traces-apm*\",\"winlogbeat-*\",\"-*elastic-cloud-logs-*\"],\"name\": \"Custom\",\"description\": \"The new rule description.\",\"severity\": \"high\",\"risk_score\": 17,\"interval\": \"1m\",\"from\": \"now-50000h\"}'",
+      "command": "cd $KIBANA_HOME/x-pack/solutions/security/plugins/security_solution && yarn test:generate --related 500 && curl --location 'http://elastic:changeme@localhost:5601/api/detection_engine/rules' --header 'kbn-xsrf: cypress-creds' --header 'Content-Type: application/json'  --header 'elastic-api-version: 2023-10-31' --data '{\"type\": \"query\",\"query\": \"*\",\"index\": [\"apm-*-transaction*\",\"auditbeat-*\",\"endgame-*\",\"filebeat-*\",\"logs-*\",\"packetbeat-*\",\"traces-apm*\",\"winlogbeat-*\",\"-*elastic-cloud-logs-*\"],\"name\": \"Custom\",\"description\": \"The new rule description.\",\"severity\": \"high\",\"risk_score\": 17,\"interval\": \"1m\",\"from\": \"now-50000h\"}'",
       "isBackground": false,
       "presentation": {
         "close": true
@@ -75,7 +85,7 @@
         "close": true
       },
       "icon": {
-        "id": "settings",
+        "id": "refresh",
         "color": "terminal.ansiGreen"
       }
     },
@@ -83,6 +93,7 @@
       "label": "Elasticsearch",
       "type": "shell",
       // "command": "yarn es snapshot --license=trial -E path.data=/Users/jan/code/elastic/_kbn_es_data_",
+      // "command": "yarn es snapshot --use-cached --license=trial",
       "command": "yarn es snapshot --license=trial",
       "isBackground": true,
       "presentation": {
@@ -120,7 +131,7 @@
     {
       "label": "Elasticsearch (serverless)",
       "type": "shell",
-      "command": "yarn es serverless --projectType=security --license=trial --kill",
+      "command": "yarn es serverless --projectType=oblt --license=trial --kill",
       "isBackground": true,
       "presentation": {
         "group": "kibana-serverless-background"
@@ -147,7 +158,7 @@
       "label": "Kibana (serverless)",
       "dependsOn": "Elasticsearch (serverless)",
       "type": "shell",
-      "command": "yarn serverless-security --no-base-path",
+      "command": "yarn serverless-oblt --no-base-path",
       "isBackground": true,
       "presentation": {
         "group": "kibana-serverless-background"
