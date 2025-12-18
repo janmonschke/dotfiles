@@ -1,0 +1,57 @@
+[
+  {
+    "label": "Kibana",
+    "shell": "system",
+    "reveal_target": "dock",
+    "command": "yarn start --no-base-path"
+  },
+  {
+    "label": "Kibana (serverless)",
+    "shell": "system",
+    "reveal_target": "dock",
+    "command": "yarn serverless-security --no-base-path"
+  },
+  {
+    "label": "Elasticsearch",
+    "shell": "system",
+    "reveal_target": "dock",
+    "command": "yarn es snapshot --license=trial"
+  },
+  {
+    "label": "Elasticsearch (serverless)",
+    "shell": "system",
+    "reveal_target": "dock",
+    "command": "yarn es serverless --projectType=security --license=trial --kill"
+  },
+  {
+    "label": "Kibana bootstrap",
+    "shell": "system",
+    "reveal_target": "center",
+    "hide": "on_success",
+    "command": "cd $KIBANA_HOME && yarn kbn bootstrap"
+  },
+  {
+    "label": "test file",
+    "shell": "system",
+    "reveal_target": "center",
+    "command": "cd $KIBANA_HOME && yarn test:jest $ZED_RELATIVE_FILE"
+  },
+  {
+    "label": "watch test file",
+    "shell": "system",
+    "reveal_target": "center",
+    "command": "cd $KIBANA_HOME && yarn test:jest $ZED_RELATIVE_FILE --watch"
+  },
+  {
+    "label": "Generate security data",
+    "shell": "system",
+    "hide": "on_success",
+    "command": "cd $KIBANA_HOME/x-pack/solutions/security/plugins/security_solution && yarn test:generate --related 500 && curl --location 'http://elastic:changeme@localhost:5601/api/detection_engine/rules' --header 'kbn-xsrf: cypress-creds' --header 'Content-Type: application/json'  --header 'elastic-api-version: 2023-10-31' --data '{\"type\": \"query\",\"query\": \"*\",\"index\": [\"apm-*-transaction*\",\"auditbeat-*\",\"endgame-*\",\"filebeat-*\",\"logs-*\",\"packetbeat-*\",\"traces-apm*\",\"winlogbeat-*\",\"-*elastic-cloud-logs-*\"],\"name\": \"Custom\",\"description\": \"The new rule description.\",\"severity\": \"high\",\"risk_score\": 17,\"interval\": \"1m\",\"from\": \"now-50000h\"}'"
+  },
+  {
+    "label": "Generate security data (serverless)",
+    "shell": "system",
+    "hide": "on_success",
+    "command": "cd $KIBANA_HOME/x-pack/solutions/security/plugins/security_solution --node http://elastic_serverless:changeme@localhost:9200 --kibana http://elastic_serverless:changeme@localhost:5601 && yarn test:generate --related 500 && curl --location 'http://elastic_serverless:changeme@localhost:5601/api/detection_engine/rules' --header 'kbn-xsrf: cypress-creds' --header 'Content-Type: application/json'  --header 'elastic-api-version: 2023-10-31' --data '{\"type\": \"query\",\"query\": \"*\",\"index\": [\"apm-*-transaction*\",\"auditbeat-*\",\"endgame-*\",\"filebeat-*\",\"logs-*\",\"packetbeat-*\",\"traces-apm*\",\"winlogbeat-*\",\"-*elastic-cloud-logs-*\"],\"name\": \"Custom\",\"description\": \"The new rule description.\",\"severity\": \"high\",\"risk_score\": 17,\"interval\": \"1m\",\"from\": \"now-50000h\"}'"
+  }
+]
